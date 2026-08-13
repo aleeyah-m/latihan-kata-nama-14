@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latihan 14 — Kata Nama Terbitan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal-950:#0b3335; --teal-900:#0f4a4d; --teal-800:#146267; --teal-700:#1a7b81;
+    --gold-500:#cf9a2e; --gold-400:#e0b04a; --gold-100:#f6e8c8;
+    --cream:#fbf4e6; --cream-2:#f3e9d4;
+    --ink:#28211a; --ink-soft:#5c5346;
+    --green:#3f7d52; --green-bg:#e7f2e9;
+    --amber:#c07f1f; --amber-bg:#fbf0dc;
+    --red:#b4453a; --red-bg:#faeae7;
+    --shadow: 0 10px 30px -12px rgba(11,51,53,0.35);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(224,176,74,0.10), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(20,98,103,0.12), transparent 45%),
+      var(--cream);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    padding:0 0 80px;
+    min-height:100vh;
+  }
+  .hero{
+    background: linear-gradient(160deg, var(--teal-950) 0%, var(--teal-900) 55%, var(--teal-800) 100%);
+    color:var(--cream);
+    padding:56px 24px 68px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(224,176,74,0.05) 0 2px, transparent 2px 26px),
+      repeating-linear-gradient(-45deg, rgba(224,176,74,0.05) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+  .hero-inner{ max-width:820px; margin:0 auto; position:relative; }
+  .kite{ width:54px; height:54px; margin-bottom:18px; display:block; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; letter-spacing:0.16em; text-transform:uppercase;
+    font-size:12.5px; color:var(--gold-400); margin-bottom:14px;
+  }
+  h1{
+    font-family:'Fraunces', serif; font-weight:600;
+    font-size:clamp(28px, 4.2vw, 44px); line-height:1.15; margin:0 0 14px;
+  }
+  h1 em{ font-style:italic; font-weight:500; color:var(--gold-400); }
+  .hero p{ font-size:16px; line-height:1.65; max-width:600px; color:#e7f0ee; margin:0 0 26px; }
+  .hero-note{
+    display:inline-flex; align-items:center; gap:10px;
+    background:rgba(224,176,74,0.14); border:1px solid rgba(224,176,74,0.35);
+    padding:10px 16px; border-radius:100px; font-size:13.5px; color:var(--gold-100);
+  }
+
+  .wrap{ max-width:820px; margin:-32px auto 0; padding:0 24px; }
+
+  .howto{
+    background:var(--cream); border:1px solid var(--cream-2);
+    border-radius:16px; padding:18px 20px; box-shadow:var(--shadow);
+    margin-bottom:16px; font-size:13.5px; color:var(--ink-soft);
+  }
+  .howto-label{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px;
+  }
+  .howto-steps{ display:flex; flex-direction:column; gap:8px; }
+  .howto-steps b{ color:var(--ink); }
+
+  .legend{
+    display:flex; gap:22px; flex-wrap:wrap;
+    background:var(--cream); border:1px solid var(--cream-2);
+    border-radius:16px; padding:16px 20px; box-shadow:var(--shadow);
+    margin-bottom:24px; font-size:13.5px; color:var(--ink-soft);
+  }
+  .legend b{ color:var(--ink); }
+  .legend-item{ display:flex; align-items:center; gap:9px; }
+  .legend-sample{
+    font-family:'Fraunces', serif; font-weight:600; font-size:15px; color:var(--ink);
+    padding:1px 4px;
+  }
+  .legend-sample.terbitan{ text-decoration:underline; text-decoration-color:var(--gold-500); text-decoration-thickness:3px; text-underline-offset:4px; }
+  .legend-sample.none{ color:var(--ink-soft); font-style:italic; }
+
+  .progress{
+    background:var(--cream); border:1px solid var(--cream-2); border-radius:16px;
+    padding:16px 20px; box-shadow:var(--shadow);
+    display:flex; align-items:center; gap:16px; margin-bottom:26px;
+  }
+  .progress-track{ flex:1; height:8px; border-radius:100px; background:var(--cream-2); overflow:hidden; }
+  .progress-fill{
+    height:100%; width:0%;
+    background:linear-gradient(90deg, var(--gold-500), var(--teal-700));
+    border-radius:100px; transition:width .5s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-label{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); white-space:nowrap; }
+
+  .card{
+    background:#fff; border:1px solid var(--cream-2); border-radius:20px;
+    padding:26px 26px 22px; margin-bottom:20px; box-shadow:var(--shadow);
+    position:relative;
+  }
+  .card::before{
+    content:""; position:absolute; left:0; top:22px; bottom:22px; width:4px;
+    background:linear-gradient(180deg, var(--gold-500), var(--teal-700)); border-radius:0 4px 4px 0;
+  }
+  .card.done::before{ background:linear-gradient(180deg, var(--green), var(--teal-700)); }
+
+  .card-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:14px; }
+  .latihan-num{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.1em;
+    color:var(--gold-500); text-transform:uppercase;
+  }
+  .status-pill{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; padding:3px 10px;
+    border-radius:100px; background:var(--cream-2); color:var(--ink-soft);
+  }
+  .status-pill.ok{ background:var(--green-bg); color:var(--green); }
+
+  .sentence{
+    font-family:'Fraunces', serif; font-size:20px; font-weight:500;
+    line-height:2.1; margin-bottom:16px;
+  }
+  .word{
+    cursor:pointer; padding:2px 4px; border-radius:6px; transition: all .12s ease;
+    display:inline-block;
+  }
+  .word:hover{ background:var(--cream-2); }
+  .word.terbitan{ text-decoration:underline; text-decoration-color:var(--gold-500); text-decoration-thickness:3px; text-underline-offset:4px; font-weight:600; }
+  .word.correct-flag{ background:var(--green-bg); }
+  .word.wrong-flag{ background:var(--red-bg); }
+  .punct{ font-family:'Fraunces', serif; font-size:20px; }
+
+  .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:6px; }
+  .btn{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13.5px;
+    padding:9px 18px; border-radius:100px; border:1.5px solid transparent; cursor:pointer;
+    transition: all .15s ease;
+  }
+  .btn-primary{ background:var(--teal-900); color:#fff; }
+  .btn-primary:hover{ background:var(--teal-800); }
+  .btn-ghost{ background:transparent; color:var(--ink-soft); border-color:var(--cream-2); }
+  .btn-ghost:hover{ border-color:var(--teal-700); color:var(--teal-900); }
+
+  .feedback{
+    margin-top:14px; border-radius:14px; padding:14px 16px; font-size:14px; line-height:1.6; display:none;
+  }
+  .feedback.show{ display:block; animation: rise .28s ease; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
+  .feedback.red{ background:var(--red-bg); color:#7a2e26; border:1px solid #e6c3bc; }
+  .feedback.amber{ background:var(--amber-bg); color:#7a5313; border:1px solid #ecd8a8; }
+  .feedback.green{ background:var(--green-bg); color:#2a5136; border:1px solid #bcdcc4; }
+  .feedback-title{ font-weight:700; margin-bottom:4px; font-size:14.5px; }
+
+  .global-actions{
+    background:var(--cream); border:1px solid var(--cream-2); border-radius:16px;
+    padding:16px 20px; box-shadow:var(--shadow); margin-bottom:26px;
+  }
+  .global-feedback{
+    margin-top:12px; border-radius:14px; padding:14px 16px; font-size:14px; line-height:1.65; display:none;
+  }
+  .global-feedback.show{ display:block; animation: rise .28s ease; background:var(--amber-bg); color:#7a5313; border:1px solid #ecd8a8; }
+  .global-feedback .hint-line{ margin-top:6px; }
+  .global-feedback .hint-line:first-child{ margin-top:0; }
+
+  footer{ max-width:820px; margin:20px auto 0; padding:0 24px; text-align:center; color:var(--ink-soft); font-size:13px; }
+
+  @media (max-width:560px){
+    .hero{ padding:44px 18px 60px; }
+    .wrap{ padding:0 16px; }
+    .card{ padding:20px 18px 18px; }
+    .sentence{ font-size:17px; line-height:2; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <svg class="kite" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 4 L54 32 L32 60 L10 32 Z" stroke="#e0b04a" stroke-width="2" fill="rgba(224,176,74,0.12)"/>
+      <path d="M32 4 L32 60 M10 32 L54 32" stroke="#e0b04a" stroke-width="1.4" opacity="0.7"/>
+      <circle cx="32" cy="32" r="4" fill="#e0b04a"/>
+    </svg>
+    <div class="eyebrow">Latihan 14 · Bahasa Melayu</div>
+    <h1>Kata Nama <em>Terbitan</em></h1>
+    <p>Kata Nama Terbitan คือคำนามที่เกิดจากคำนาม/คำกริยา/คำคุณศัพท์เดิม + imbuhan (หน่วยคำเติม) เช่น pe-, peN-...-an, ke-...-an, -an, per-...-an ให้หาและขีดเส้นใต้คำเหล่านี้ในแต่ละประโยค</p>
+    <div class="hero-note">✍️ คำชี้แจง: จงขีดเส้นใต้ Kata Nama Terbitan ในแต่ละข้อ</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="howto">
+    <div class="howto-label">วิธีทำ</div>
+    <div class="howto-steps">
+      <div><b>1.</b> อ่านประโยค แล้วสังเกตคำนามทุกคำในประโยคนั้น</div>
+      <div><b>2.</b> ตรวจว่าคำนามนั้นมี <b>imbuhan</b> (หน่วยคำเติมหน้า/เติมหลัง/เติมทั้งหน้าและหลัง) ประกอบอยู่หรือไม่ เช่น <b>pe-</b>, <b>peN-...-an</b>, <b>ke-...-an</b>, <b>-an</b>, <b>per-...-an</b></div>
+      <div><b>3.</b> ถ้าใช่ (เป็นคำนามที่ "เกิดขึ้นใหม่" จากรากศัพท์ + imbuhan) → คลิกคำนั้น <b>1 ครั้ง</b> เพื่อขีดเส้นใต้</div>
+      <div><b>4.</b> คำนามที่เป็นรากศัพท์ล้วน ๆ (Kata Nama Tunggal เช่น buku, kelas, negara) และคำที่ไม่ใช่คำนามเลย <b>ไม่ต้องคลิก</b></div>
+      <div><b>5.</b> คลิกซ้ำที่คำเดิมเพื่อยกเลิกเส้นใต้ ทำครบทุกข้อแล้วกด <b>"ตรวจคำตอบ"</b></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-sample terbitan">pendidikan</span><span>Kata Nama Terbitan — คลิกเพื่อขีดเส้นใต้</span></div>
+    <div class="legend-item"><span class="legend-sample none">buku, kelas, di</span><span>ไม่ต้องคลิก (คำนามราก / ไม่ใช่คำนาม)</span></div>
+  </div>
+
+  <div class="progress">
+    <div class="progress-label" id="progressLabel">0 / 10 ประโยค</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div id="sentences"></div>
+
+  <div class="global-actions">
+    <div class="actions" style="margin-bottom:0;">
+      <button class="btn btn-primary" id="hintBtn">💡 คำใบ้ทั่วไป</button>
+      <button class="btn btn-ghost" id="resetAllBtn">รีเซ็ตทั้งหมด</button>
+    </div>
+    <div class="global-feedback" id="globalFeedback"></div>
+  </div>
+</div>
+
+<footer>คำใบ้เป็นหลักการทั่วไปเรื่อง imbuhan ไม่เฉลยคำตอบรายประโยค</footer>
+
+<script>
+// tag: "NONE" | "TERBITAN"
+const sentenceData = [
+  {
+    words: [
+      { text: "Pensyarah", tag: "TERBITAN" },
+      { text: "itu", tag: "NONE" },
+      { text: "sedang", tag: "NONE" },
+      { text: "mengajar", tag: "NONE" },
+      { text: "murid", tag: "NONE" },
+      { text: "di", tag: "NONE" },
+      { text: "dalam", tag: "NONE" },
+      { text: "kelas", tag: "NONE" },
+    ],
+  },
+  {
+    words: [
+      { text: "Penulis", tag: "TERBITAN" },
+      { text: "itu", tag: "NONE" },
+      { text: "menghasilkan", tag: "NONE" },
+      { text: "sebuah", tag: "NONE" },
+      { text: "buku", tag: "NONE" },
+    ],
+  },
+  {
+    words: [
+      { text: "Ibu", tag: "NONE" },
+      { text: "menyediakan", tag: "NONE" },
+      { text: "makanan", tag: "TERBITAN" },
+      { text: "untuk", tag: "NONE" },
+      { text: "keluarga", tag: "NONE" },
+    ],
+  },
+  {
+    words: [
+      { text: "Pendidikan", tag: "TERBITAN" },
+      { text: "sangat", tag: "NONE" },
+      { text: "penting", tag: "NONE" },
+      { text: "dalam", tag: "NONE" },
+      { text: "kehidupan", tag: "TERBITAN" },
+    ],
+  },
+  {
+    words: [
+      { text: "Ayah", tag: "NONE" },
+      { text: "bekerja", tag: "NONE" },
+      { text: "sebagai", tag: "NONE" },
+      { text: "pekerja", tag: "TERBITAN" },
+      { text: "di", tag: "NONE" },
+      { text: "sebuah", tag: "NONE" },
+      { text: "syarikat", tag: "NONE" },
+    ],
+  },
+  {
+    words: [
+      { text: "Kebersihan", tag: "TERBITAN" },
+      { text: "perlu", tag: "NONE" },
+      { text: "dijaga", tag: "NONE" },
+      { text: "oleh", tag: "NONE" },
+      { text: "semua", tag: "NONE" },
+      { text: "orang", tag: "NONE" },
+    ],
+  },
+  {
+    words: [
+      { text: "Mereka", tag: "NONE" },
+      { text: "sedang", tag: "NONE" },
+      { text: "membincangkan", tag: "NONE" },
+      { text: "pembangunan", tag: "TERBITAN" },
+      { text: "kawasan", tag: "NONE" },
+      { text: "tersebut", tag: "NONE" },
+    ],
+  },
+  {
+    words: [
+      { text: "Penyanyi", tag: "TERBITAN" },
+      { text: "itu", tag: "NONE" },
+      { text: "mempunyai", tag: "NONE" },
+      { text: "suara", tag: "NONE" },
+      { text: "yang", tag: "NONE" },
+      { text: "merdu", tag: "NONE" },
+    ],
+  },
+  {
+    words: [
+      { text: "Kami", tag: "NONE" },
+      { text: "menikmati", tag: "NONE" },
+      { text: "minuman", tag: "TERBITAN" },
+      { text: "di", tag: "NONE" },
+      { text: "restoran", tag: "NONE" },
+    ],
+  },
+  {
+    words: [
+      { text: "Perdagangan", tag: "TERBITAN" },
+      { text: "antara", tag: "NONE" },
+      { text: "kedua-dua", tag: "NONE" },
+      { text: "negara", tag: "NONE" },
+      { text: "semakin", tag: "NONE" },
+      { text: "berkembang", tag: "NONE" },
+    ],
+  },
+];
+
+const hints = [
+  "Kata Nama Terbitan เกิดจากรากศัพท์ (คำนาม/คำกริยา/คำคุณศัพท์) ที่เติม imbuhan เพื่อให้กลายเป็นคำนามคำใหม่",
+  "รูปแบบ imbuhan ที่พบบ่อย: peN- (เช่น penulis, pensyarah), peN-...-an (เช่น pendidikan, pembangunan), ke-...-an (เช่น kebersihan, kehidupan), -an (เช่น makanan, minuman), per-...-an (เช่น perdagangan)",
+  "คำนามที่เป็นรากศัพท์อยู่แล้วโดยไม่มี imbuhan เติม (เช่น buku, kelas, negara, suara) ไม่นับเป็น Kata Nama Terbitan แม้จะลงท้ายด้วยเสียงคล้ายคำเติมก็ตาม",
+  "คำกริยาที่มี imbuhan (เช่น mengajar, menghasilkan, membincangkan) ไม่ใช่คำนาม จึงไม่ใช่ Kata Nama Terbitan — สังเกตหน้าที่ของคำในประโยคด้วย ไม่ใช่แค่รูปคำ",
+];
+
+const state = sentenceData.map(s => ({
+  tags: s.words.map(() => "NONE"),
+  done: false,
+}));
+let hintLevel = 0;
+
+const cycleNext = { NONE: "TERBITAN", TERBITAN: "NONE" };
+
+function render(){
+  const container = document.getElementById('sentences');
+  container.innerHTML = '';
+  sentenceData.forEach((s, si) => {
+    const card = document.createElement('div');
+    card.className = 'card' + (state[si].done ? ' done' : '');
+    card.id = 'card-' + si;
+
+    const sentenceHtml = s.words.map((w, wi) => {
+      return `<span class="word" data-si="${si}" data-wi="${wi}" id="word-${si}-${wi}">${w.text}</span>`;
+    }).join(' ') + '<span class="punct">.</span>';
+
+    card.innerHTML = `
+      <div class="card-head">
+        <span class="latihan-num">Ayat ${si + 1}</span>
+        <span class="status-pill ${state[si].done ? 'ok' : ''}" id="pill-${si}">${state[si].done ? '✓ เสร็จแล้ว' : 'ยังไม่เสร็จ'}</span>
+      </div>
+      <div class="sentence">${sentenceHtml}</div>
+      <div class="actions">
+        <button class="btn btn-primary" id="check-${si}">ตรวจคำตอบ</button>
+        <button class="btn btn-ghost" id="reset-${si}">รีเซ็ตประโยคนี้</button>
+      </div>
+      <div class="feedback" id="feedback-${si}"></div>
+    `;
+    container.appendChild(card);
+
+    s.words.forEach((w, wi) => {
+      applyClass(si, wi);
+      document.getElementById(`word-${si}-${wi}`).addEventListener('click', () => {
+        state[si].tags[wi] = cycleNext[state[si].tags[wi]];
+        applyClass(si, wi);
+        clearFeedback(si);
+      });
+    });
+
+    document.getElementById('check-' + si).addEventListener('click', () => checkSentence(si));
+    document.getElementById('reset-' + si).addEventListener('click', () => resetSentence(si));
+  });
+  updateProgress();
+}
+
+function applyClass(si, wi){
+  const el = document.getElementById(`word-${si}-${wi}`);
+  el.classList.remove('terbitan', 'correct-flag', 'wrong-flag');
+  const tag = state[si].tags[wi];
+  if(tag === 'TERBITAN') el.classList.add('terbitan');
+}
+
+function clearFeedback(si){
+  const fb = document.getElementById('feedback-' + si);
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+}
+
+function resetSentence(si){
+  state[si].tags = sentenceData[si].words.map(() => "NONE");
+  state[si].done = false;
+  render();
+}
+
+function checkSentence(si){
+  const words = sentenceData[si].words;
+  let correctCount = 0;
+  words.forEach((w, wi) => {
+    const el = document.getElementById(`word-${si}-${wi}`);
+    el.classList.remove('correct-flag', 'wrong-flag');
+    const isCorrect = state[si].tags[wi] === w.tag;
+    el.classList.add(isCorrect ? 'correct-flag' : 'wrong-flag');
+    if(isCorrect) correctCount++;
+  });
+
+  const ratio = correctCount / words.length;
+  const fb = document.getElementById('feedback-' + si);
+  fb.className = 'feedback show';
+
+  if(ratio === 1){
+    state[si].done = true;
+    fb.classList.add('green');
+    fb.innerHTML = `<div class="feedback-title">🟢 Tahniah! 🎉</div><div>คุณหา Kata Nama Terbitan ในประโยคนี้ได้ถูกต้องครบทุกคำ</div>`;
+    document.getElementById('pill-' + si).textContent = '✓ เสร็จแล้ว';
+    document.getElementById('pill-' + si).classList.add('ok');
+    document.getElementById('card-' + si).classList.add('done');
+  } else if(ratio >= 0.5){
+    fb.classList.add('amber');
+    fb.innerHTML = `<div class="feedback-title">🟡 Hampir betul!</div><div>ถูก ${correctCount} จาก ${words.length} ตำแหน่ง คำที่แสดงพื้นหลังสีแดงยังทำเครื่องหมายผิดอยู่ ลองตรวจดูว่าคำนั้นมี imbuhan ประกอบเป็นคำนามใหม่จริงหรือไม่</div>`;
+  } else {
+    fb.classList.add('red');
+    fb.innerHTML = `<div class="feedback-title">🔴 Belum tepat!</div><div>ถูกเพียง ${correctCount} จาก ${words.length} ตำแหน่ง ลองกดปุ่ม "💡 คำใบ้ทั่วไป" ด้านล่างเพื่อทบทวนรูปแบบ imbuhan ก่อนลองใหม่</div>`;
+  }
+
+  updateProgress();
+}
+
+function updateProgress(){
+  const solved = state.filter(s => s.done).length;
+  document.getElementById('progressLabel').textContent = `${solved} / ${sentenceData.length} ประโยค`;
+  document.getElementById('progressFill').style.width = (solved / sentenceData.length * 100) + '%';
+}
+
+document.getElementById('resetAllBtn').addEventListener('click', () => {
+  state.forEach((s, si) => {
+    state[si].tags = sentenceData[si].words.map(() => "NONE");
+    state[si].done = false;
+  });
+  hintLevel = 0;
+  document.getElementById('globalFeedback').className = 'global-feedback';
+  render();
+});
+
+document.getElementById('hintBtn').addEventListener('click', () => {
+  const fb = document.getElementById('globalFeedback');
+  fb.className = 'global-feedback show';
+
+  if(hintLevel >= hints.length){
+    fb.innerHTML = `<div class="feedback-title">💡 หมดคำใบ้แล้ว</div><div>ลองพิจารณาแต่ละคำในประโยคอีกครั้งตามหลักที่ให้มาทั้งหมด</div>`;
+    return;
+  }
+
+  const hintsToShow = hints.slice(0, hintLevel + 1);
+  fb.innerHTML = `<div class="feedback-title">💡 คำใบ้ ${hintLevel + 1}/${hints.length}</div>` +
+    hintsToShow.map((h, i) => `<div class="hint-line">${i + 1}. ${h}</div>`).join('');
+  hintLevel++;
+});
+
+render();
+</script>
+</body>
+</html>
